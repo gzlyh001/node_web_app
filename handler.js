@@ -1,6 +1,8 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 
+var sys = require('util');
+
 function sleep(milliSeconds) {
 	var startTime = new Date().getTime();
 	while ( new Date().getTime() < startTime + milliSeconds );
@@ -10,6 +12,18 @@ function respError(response, error) {
 	response.writeHead(500, {'Content-Type': 'text/plain; charset=utf-8'});
 	response.write(error + '\n');
 	response.end();
+}
+
+function showTemplate(response, tplName) {
+	fs.readFile(__dirname + '/tpl/' + tplName + '.tpl', 'utf8', function(error, contents) {
+		if ( error ) {
+			respError(response, error);
+		} else {
+			response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
+			response.write(contents, 'utf8');
+			response.end();
+		}
+	});
 }
 
 function index(request, response) {
@@ -39,15 +53,7 @@ function index(request, response) {
 	}
 	*/
 	
-	fs.readFile(__dirname + '/tpl/home.tpl', 'utf8', function(error, contents) {
-		if ( error ) {
-			respError(response, error);
-		} else {
-			response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-			response.write(contents, 'utf8');
-			response.end();
-		}
-	});
+	showTemplate(response, 'home');
 	
 }
 
@@ -84,9 +90,32 @@ function show(request, response) {
 	
 }
 
+function form(request, response) {
+	
+	if ( request.method == 'POST' ) {
+		response.writeHead(200, {'content-type': 'text/plain'});
+		response.write('form submitted:\n\n');
+		response.end(sys.inspect({query: request.queryData, post: request.postData}));
+	} else {
+	
+		showTemplate(response, 'form');
+		
+	}
+}
+
 function upload(request, response) {
 	
-	// TODO ...
+	if ( request.method == 'POST' ) {
+		
+		response.writeHead(200, {'content-type': 'text/plain'});
+		response.write('received upload:\n\n');
+		response.end(sys.inspect({query: request.queryData, post: request.postData, files: request.postFile}));
+		
+	} else {
+	
+		showTemplate(response, 'upload');
+		
+	}
 	
 }
 
@@ -97,8 +126,16 @@ function web404(request, response) {
 	response.end();
 }
 
+function web500(response) {
+	
+	respError(response, '500 Internal Error');
+}
+
 exports.index = index;
 exports.blocking = blocking;
 exports.show = show;
+exports.form = form;
 exports.upload = upload;
 exports.web404 = web404;
+exports.web500 = web500;
+exports.respError = respError;

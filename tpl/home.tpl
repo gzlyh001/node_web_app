@@ -46,6 +46,10 @@
 		<span><a href="/show.html">/show.html</a></span>
 	</div>
 	<div class="item">
+		<span class="name">Form: </span>
+		<span><a href="/form.html">/form.html</a></span>
+	</div>
+	<div class="item">
 		<span class="name">Upload File: </span>
 		<span><a href="/upload.html">/upload.html</a></span>
 	</div>

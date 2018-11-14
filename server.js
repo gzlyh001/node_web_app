@@ -1,7 +1,10 @@
 var http = require('http');
 var url = require('url');
 var qs = require('qs');
+var formidable = require('formidable');
+
 var router = require('./router');
+var handler = require('./handler');
 
 var port = 3000;
 
@@ -30,8 +33,22 @@ function start() {
 		}
 		
 		var postData = '';
-		request.setEncoding('utf8');
 		if ( request.method == 'POST' ) {
+		
+			var form = new formidable.IncomingForm();
+			form.parse(request, function(error, fields, files) {
+				if ( error ) {
+					handler.respError(response, error);
+				} else {
+					request.postString = '+++';
+					request.postData = fields;
+					request.postFile = files;
+					dealRequest();
+				}
+			});
+			
+			/*
+			request.setEncoding('utf8');
 			
 			request.on('data', function(data) {
 				// console.log('  Received POST data chunk: ' + data);
@@ -55,6 +72,7 @@ function start() {
 				}
 				dealRequest();
 			});
+			*/
 			
 		} else {
 		
@@ -68,9 +86,7 @@ function start() {
 			if ( typeof handlerAction === 'function' ) {
 				handlerAction(request, response);
 			} else {
-				response.writeHead(500, {'Content-Type': 'text/plain'});
-				response.write('500 Internal Error');
-				response.end();
+				handler.web500(response);
 			}
 		}
 			
