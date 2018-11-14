@@ -107,9 +107,21 @@ function upload(request, response) {
 	
 	if ( request.method == 'POST' ) {
 		
+		if ( request.postFile ) {
+			var files = request.postFile;
+			// fs.renameSync(files.file.path, __dirname + '/images/' + files.file.name);
+			var readStream = fs.createReadStream(files.file.path);
+			var writeStream = fs.createWriteStream(__dirname + '/images/' + files.file.name);
+			readStream.pipe(writeStream);
+			readStream.on('end', function() {
+				fs.unlinkSync(files.upload.path);
+			});
+		}
+
 		response.writeHead(200, {'content-type': 'text/plain'});
-		response.write('received upload:\n\n');
-		response.end(sys.inspect({query: request.queryData, post: request.postData, files: request.postFile}));
+		// response.write('received upload:\n\n');
+		// response.end(sys.inspect({query: request.queryData, post: request.postData, files: request.postFile}));
+		response.end('Uploaded!');
 		
 	} else {
 	
