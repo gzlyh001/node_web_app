@@ -6,6 +6,7 @@ handles['/index.html'] = handler.index;
 handles['/home.html'] = handler.index;
 handles['/blocking.html'] = handler.blocking;
 handles['/show.html'] = handler.show;
+handles['/json.html'] = handler.json;
 handles['/form.html'] = handler.form;
 handles['/upload.html'] = handler.upload;
 

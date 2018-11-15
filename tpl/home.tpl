@@ -46,6 +46,10 @@
 		<span><a href="/show.html">/show.html</a></span>
 	</div>
 	<div class="item">
+		<span class="name">Json: </span>
+		<span><a href="/json.html">/json.html</a></span>
+	</div>
+	<div class="item">
 		<span class="name">Form: </span>
 		<span><a href="/form.html">/form.html</a></span>
 	</div>

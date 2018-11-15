@@ -90,6 +90,19 @@ function show(request, response) {
 	
 }
 
+function json(request, response) {
+	fs.readFile(__dirname + '/tpl/c51.json', 'utf8', function(error, contents) {
+		if ( error ) {
+			respError(response, error);
+		} else {
+			var c51 = JSON.parse(contents);
+			response.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
+			response.write(JSON.stringify(c51), 'utf8');
+			response.end();
+		}
+	});
+}
+
 function form(request, response) {
 	
 	if ( request.method == 'POST' ) {
@@ -146,6 +159,7 @@ function web500(response) {
 exports.index = index;
 exports.blocking = blocking;
 exports.show = show;
+exports.json = json;
 exports.form = form;
 exports.upload = upload;
 exports.web404 = web404;
