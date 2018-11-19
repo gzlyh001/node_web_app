@@ -50,6 +50,10 @@
 		<span><a href="/json.html">/json.html</a></span>
 	</div>
 	<div class="item">
+		<span class="name">MySQL: </span>
+		<span><a href="/mysql.html">/mysql.html</a></span>
+	</div>
+	<div class="item">
 		<span class="name">Form: </span>
 		<span><a href="/form.html">/form.html</a></span>
 	</div>

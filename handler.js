@@ -1,5 +1,6 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
+var mysql = require('mysql');
 
 var sys = require('util');
 
@@ -103,6 +104,50 @@ function json(request, response) {
 	});
 }
 
+function mysql_select(request, response) {
+
+	var conn = mysql.createConnection({
+		host	: 'localhost',
+		user	: 'root',
+		password: 'root',
+		database: 'checkout51'
+	});
+	
+	conn.connect();
+
+	var sql = "SELECT * FROM `tb_offer`";
+
+	conn.query(sql, function(error, results) {
+
+		if ( error ) {
+			//throw error;
+			response.writeHead(200, {'content-type': 'text/plain'});
+			response.write('DB ERROR: ' + error.message);
+			response.end();
+			return;
+		} else {
+			
+			/*
+			for ( var i = 0, len = results.length; i < len; i++ ) {
+				//console.log(results[i]);
+				console.log('===== ' + (i+1) + ' =====');
+				for ( var key in results[i] ) {
+					console.log( key + ' : ' + results[0][key]);
+				}
+			}*/
+			
+			var ret = { "batch_id" : 0, "offers" : results };
+			
+			response.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
+			response.write(JSON.stringify(ret), 'utf8');
+			response.end();
+		
+		}
+	
+	});
+	
+}
+
 function form(request, response) {
 	
 	if ( request.method == 'POST' ) {
@@ -160,6 +205,7 @@ exports.index = index;
 exports.blocking = blocking;
 exports.show = show;
 exports.json = json;
+exports.mysql = mysql_select;
 exports.form = form;
 exports.upload = upload;
 exports.web404 = web404;
